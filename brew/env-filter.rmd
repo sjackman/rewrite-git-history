@@ -1,0 +1,45 @@
+```{r load-libraries, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(magrittr)
+library(readr)
+```
+
+```{r read-data}
+time_zone <- "+0800"
+data1 <- read_delim("legacy-homebrew.tsv", delim = "\t", quote = "")
+data2 <- read_delim("brew.tsv", delim = "\t", quote = "")
+```
+
+```{r munge-data}
+merged_data <- right_join(data1, data2,
+	  by = c("Subject", "Author_name", "Author_email", "Author_date")) %>%
+	filter(Committer_date.x > 1.45e9 &
+		(Committer_name.x != Committer_name.y
+		| Committer_email.x != Committer_email.y
+		| Committer_date.x != Committer_date.y))
+sh <- merged_data %$% c(
+		"#!/bin/sh",
+		"case $GIT_COMMIT in",
+    paste0(SHA1.x, ")",
+			" GIT_COMMITTER_DATE='", Committer_date.y, " ", time_zone, "'",
+			" GIT_COMMITTER_NAME='", Committer_name.y, "'",
+			" GIT_COMMITTER_EMAIL='", Committer_email.y, "'",
+			";;"),
+    "esac",
+		"export GIT_COMMITTER_DATE GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL") %>%
+		data_frame
+```
+
+```{r write-data}
+write_tsv(merged_data, "env-filter.tsv")
+write_tsv(sh, "env-filter.sh", col_names = FALSE)
+```
+
+```{r plot-commiter-date}
+ggplot(merged_data) +
+  aes(x = Committer_date.x, y = Committer_date.y) +
+  xlab("Committer date of Homebrew/legacy-homebrew") +
+  ylab("Commiter date of Homebrew/brew") +
+  geom_point()
+```

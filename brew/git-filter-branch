@@ -1,0 +1,23 @@
+#!/bin/sh
+set -eux
+PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+
+git filter-branch -f --msg-filter 'sed -Ee "s~ (#[0-9]+)~ Linuxbrew/linuxbrew\1~g"' -- 7814c5b9393a7dabc6b78e51bc21a7d3a6999dd2...master
+
+git filter-branch -f --prune-empty \
+  --index-filter 'git rm --cached --ignore-unmatch -r -q -- Library/Formula Library/Aliases ;' \
+  --msg-filter 'sed -Ee "s~ (#[0-9]+)~ Homebrew/homebrew\1~g"' \
+  --env-filter ". $PWD/../env-filter.sh" \
+  -- --all
+
+git filter-branch -f --prune-empty --parent-filter '
+ruby -e '"'"'
+old_parents = gets.chomp.gsub("-p ", " ")
+new_parents = if old_parents.empty? then
+  []
+else
+  `git show-branch --independent #{old_parents}`.split
+end
+puts new_parents.map{|p| "-p " + p}.join(" ")
+'"'" \
+  -- 001b8de679e776516ae266699e40d403945137d2..master
