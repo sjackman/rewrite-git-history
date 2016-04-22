@@ -35,10 +35,22 @@ env-filter.html: legacy-homebrew.tsv homebrew-core.tsv
 # 2323ae2 update tap_migrations
 linuxbrew-core/.git/config: linuxbrew/.git/config env-filter.sh
 	cp -a linuxbrew linuxbrew-core
-	# Change #123 to either Linuxbrew/linuxbrew#123 or Homebrew/homebrew#123.
-	# Remove all files except Library/Formula and Library/Aliases and reroot on Library.
+	cd linuxbrew-core && git remote add legacy-homebrew https://github.com/Homebrew/legacy-homebrew.git
+	cd linuxbrew-core && git fetch legacy-homebrew
+	cd linuxbrew-core && git remote add homebrew-core https://github.com/Homebrew/homebrew-core.git
+	cd linuxbrew-core && git fetch homebrew-core
+	# Change #123 to Linuxbrew/linuxbrew#123.
+	cd linuxbrew-core && git filter-branch -f --msg-filter 'sed -Ee "s~ (#[0-9]+)~ Linuxbrew/linuxbrew\1~g"' -- legacy-homebrew/master..master
+	# Change #123 to Homebrew/homebrew#123.
+	# Remove all files except Library/Formula and Library/Aliases.
 	# Correct committer author and date.
-	cd linuxbrew-core && ../git-filter-branch-core
+	cd linuxbrew-core && git filter-branch -f --prune-empty \
+		--msg-filter 'sed -Ee "s~ (#[0-9]+)~ Homebrew/homebrew\1~g"' \
+		--index-filter 'git rm --cached --ignore-unmatch -r -q -- . ; git reset -q $$GIT_COMMIT -- Library/Formula Library/Aliases;' \
+		--env-filter ". $(PWD)/env-filter.sh" \
+		-- --all
+	# Reroot on Library.
+	cd linuxbrew-core && git filter-branch -f --prune-empty --subdirectory-filter Library -- --all
 	# Graft a9bfaf1 add formula_renames.json and tap_migrations.json
 	# and 0f293a9 add LICENSE.txt
 	# onto 47e3f93 libxslt: update 1.1.28_1 bottle.
