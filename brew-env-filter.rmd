@@ -32,8 +32,8 @@ sh <- merged_data %$% c(
 ```
 
 ```{r write-data}
-write_tsv(merged_data, "env-filter.tsv")
-write_tsv(sh, "env-filter.sh", col_names = FALSE)
+write_tsv(merged_data, "brew-env-filter.tsv")
+write_tsv(sh, "brew-env-filter.sh", col_names = FALSE)
 ```
 
 ```{r plot-commiter-date}
