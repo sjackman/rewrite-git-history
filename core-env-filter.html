@@ -135,8 +135,8 @@ sh &lt;- merged_data %$% c(
     &quot;esac&quot;,
         &quot;export GIT_COMMITTER_DATE GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL&quot;) %&gt;%
         data_frame</code></pre>
-<pre class="r"><code>write_tsv(merged_data, &quot;env-filter.tsv&quot;)
-write_tsv(sh, &quot;env-filter.sh&quot;, col_names = FALSE)</code></pre>
+<pre class="r"><code>write_tsv(merged_data, &quot;core-env-filter.tsv&quot;)
+write_tsv(sh, &quot;core-env-filter.sh&quot;, col_names = FALSE)</code></pre>
 <pre class="r"><code>ggplot(merged_data) +
   aes(x = Committer_date.x, y = Committer_date.y) +
   xlab(&quot;Committer date of Homebrew/legacy-homebrew&quot;) +
