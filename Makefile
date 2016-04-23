@@ -37,12 +37,12 @@ linuxbrew-brew/.git/config: linuxbrew/.git/config brew-env-filter.sh
 	cd linuxbrew-brew && git remote add brew https://github.com/Homebrew/brew.git
 	cd linuxbrew-brew && git fetch brew
 	# Change #123 to Linuxbrew/linuxbrew#123.
-	cd linuxbrew-brew && git filter-branch --msg-filter 'sed -Ee "s~ (#[0-9]+)~ Linuxbrew/linuxbrew\1~g"' -- legacy-homebrew/master..
+	cd linuxbrew-brew && git filter-branch --msg-filter 'gsed -Ee "s~ (#[0-9]+)~ Linuxbrew/linuxbrew\1~g"' -- legacy-homebrew/master..
 	# Change #123 to Homebrew/homebrew#123.
 	# Remove Library/Formula and Library/Aliases.
 	# Correct committer author and date.
 	cd linuxbrew-brew && git filter-branch -f --prune-empty \
-		--msg-filter 'sed -Ee "s~ (#[0-9]+)~ Homebrew/homebrew\1~g"' \
+		--msg-filter 'gsed -Ee "s~ (#[0-9]+)~ Homebrew/homebrew\1~g"' \
 		--index-filter 'git rm --cached --ignore-unmatch -r -q -- Library/Formula Library/Aliases' \
 		--env-filter ". $(PWD)/brew-env-filter.sh" \
 		-- --all
@@ -65,12 +65,12 @@ linuxbrew-core/.git/config: linuxbrew/.git/config core-env-filter.sh
 	cd linuxbrew-core && git remote add homebrew-core https://github.com/Homebrew/homebrew-core.git
 	cd linuxbrew-core && git fetch homebrew-core
 	# Change #123 to Linuxbrew/linuxbrew#123.
-	cd linuxbrew-core && git filter-branch -f --msg-filter 'sed -Ee "s~ (#[0-9]+)~ Linuxbrew/linuxbrew\1~g"' -- legacy-homebrew/master..master
+	cd linuxbrew-core && git filter-branch -f --msg-filter 'gsed -Ee "s~ (#[0-9]+)~ Linuxbrew/linuxbrew\1~g"' -- legacy-homebrew/master..master
 	# Change #123 to Homebrew/homebrew#123.
 	# Remove all files except Library/Formula and Library/Aliases.
 	# Correct committer author and date.
 	cd linuxbrew-core && git filter-branch -f --prune-empty \
-		--msg-filter 'sed -Ee "s~ (#[0-9]+)~ Homebrew/homebrew\1~g"' \
+		--msg-filter 'gsed -Ee "s~ (#[0-9]+)~ Homebrew/homebrew\1~g"' \
 		--index-filter 'git rm --cached --ignore-unmatch -r -q -- . ; git reset -q $$GIT_COMMIT -- Library/Formula Library/Aliases;' \
 		--env-filter ". $(PWD)/core-env-filter.sh" \
 		-- --all
@@ -95,11 +95,11 @@ linuxbrew-core/.git/config: linuxbrew/.git/config core-env-filter.sh
 	# Update formula_renames.json from 1413b79 libodbc++: boneyard
 	cd linuxbrew-core && git filter-branch -f --tree-filter "git checkout 1413b79 tap_migrations.json" -- --ancestry-path 1413b793cd536f12ce387c65e17c54d86f77855b~1..
 	# Remove 71e2276 Merge remote-tracking branch 'origin/master'
-	cd linuxbrew-core && git filter-branch -f --parent-filter 'sed s/71e2276787d1254932271d807ff5de4cb6b64d77/ea76f6c57874182ebfe63103c2c7e5b23e038669/' -- --ancestry-path 71e2276787d1254932271d807ff5de4cb6b64d77~1..
+	cd linuxbrew-core && git filter-branch -f --parent-filter 'gsed s/71e2276787d1254932271d807ff5de4cb6b64d77/ea76f6c57874182ebfe63103c2c7e5b23e038669/' -- --ancestry-path 71e2276787d1254932271d807ff5de4cb6b64d77~1..
 	# Graft 2323ae2 update tap_migrations
 	# onto ef98654 imapsync: update 1.678 bottle.
-	cd linuxbrew-core && git filter-branch -f --parent-filter 'sed s/ef986543c2b5067a599a031edd432500ee6d23e2/2323ae27a16c511dc2d0b06d69602569a51f465e/' -- --ancestry-path ef986543c2b5067a599a031edd432500ee6d23e2..
+	cd linuxbrew-core && git filter-branch -f --parent-filter 'gsed s/ef986543c2b5067a599a031edd432500ee6d23e2/2323ae27a16c511dc2d0b06d69602569a51f465e/' -- --ancestry-path ef986543c2b5067a599a031edd432500ee6d23e2..
 	# Update tap_migrations.json from 2323ae2 update tap_migrations
 	cd linuxbrew-core && git filter-branch -f --tree-filter "git checkout 2323ae2 tap_migrations.json" -- --ancestry-path 2323ae27a16c511dc2d0b06d69602569a51f465e..
 	# Add mising new-line at end of message to cd7b96e ponyc: Update ponyc upstream URLs
-	cd linuxbrew-core && git filter-branch -f --msg-filter 'sed \$$a\\' -- --ancestry-path cd7b96e3896cab5ac9f74aaa577b80b77a7fbd41~1..
+	cd linuxbrew-core && git filter-branch -f --msg-filter 'gsed \$$a\\' -- --ancestry-path cd7b96e3896cab5ac9f74aaa577b80b77a7fbd41~1..
