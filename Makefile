@@ -79,17 +79,17 @@ linuxbrew-core/.git/config: linuxbrew/.git/config core-env-filter.sh
 	# Graft a9bfaf1 add formula_renames.json and tap_migrations.json
 	# and 0f293a9 add LICENSE.txt
 	# onto 47e3f93 libxslt: update 1.1.28_1 bottle.
-	cd linuxbrew-core && git filter-branch -f --parent-filter 's/47e3f93a2d465ee46c281b5150b7f975633089ac/0f293a9b3d8904f50bc53fbc8154e224b8493bec/' -- --ancestry-path 47e3f93a2d465ee46c281b5150b7f975633089ac..
+	cd linuxbrew-core && git filter-branch -f --parent-filter 'gsed s/47e3f93a2d465ee46c281b5150b7f975633089ac/0f293a9b3d8904f50bc53fbc8154e224b8493bec/' -- --ancestry-path 47e3f93a2d465ee46c281b5150b7f975633089ac..
 	# Add formula_renames.json from a9bfaf1 add formula_renames.json and tap_migrations.json
 	# Add LICENSE.txt from 0f293a9 add LICENSE.txt
-	cd linuxbrew-core && git filter-branch -f --tree-filter "git checkout 0f293a9 LICENSE.txt formula_renames.json" --ancestry-path 0f293a9b3d8904f50bc53fbc8154e224b8493bec..
+	cd linuxbrew-core && git filter-branch -f --tree-filter "git checkout 0f293a9 LICENSE.txt formula_renames.json" -- --ancestry-path 0f293a9b3d8904f50bc53fbc8154e224b8493bec..
 	# Add formula_renames.json from a9bfaf1 add formula_renames.json and tap_migrations.json
 	cd linuxbrew-core && git filter-branch -f --tree-filter "git checkout a9bfaf1 tap_migrations.json" -- --ancestry-path a9bfaf1504d66c6788daa3600befeb06f56289d4..
 	# Update formula_renames.json from 5199b51 mlton 20130715 (new formula)
 	cd linuxbrew-core && git filter-branch -f --tree-filter "git checkout 5199b51 tap_migrations.json" -- --ancestry-path 5199b5138fd0e1c23127be51f540221f67978831~1..
 	# Graft 26e0c51 update tap_migrations
 	# onto 0b7525c lbdb: add 0.41 bottle.
-	cd linuxbrew-core && git filter-branch -f --parent-filter 's/0b7525c43259b4c36f61741f8c94001d12825e6b/26e0c5121720940aabd693ce911eb1a34bc7ff5b/' -- --ancestry-path 0b7525c43259b4c36f61741f8c94001d12825e6b..
+	cd linuxbrew-core && git filter-branch -f --parent-filter 'gsed s/0b7525c43259b4c36f61741f8c94001d12825e6b/26e0c5121720940aabd693ce911eb1a34bc7ff5b/' -- --ancestry-path 0b7525c43259b4c36f61741f8c94001d12825e6b..
 	# Update tap_migrations.json from 26e0c51 update tap_migrations
 	cd linuxbrew-core && git filter-branch -f --tree-filter "git checkout 26e0c51 tap_migrations.json" -- --ancestry-path 26e0c5121720940aabd693ce911eb1a34bc7ff5b..
 	# Update formula_renames.json from 1413b79 libodbc++: boneyard
